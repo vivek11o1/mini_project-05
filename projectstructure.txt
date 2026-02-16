@@ -1,0 +1,19 @@
+PriceNest/
+├── data/
+│   └── housing.csv                # Dataset (Kaggle or your own)
+│
+├── models/
+│   └── price_model.joblib         # Trained ML model (generated after training)
+│
+├── src/
+│   ├── __init__.py
+│   ├── data_loader.py             # Load & clean dataset
+│   ├── features.py                # (Optional) Feature engineering
+│   ├── train.py                   # Train + evaluate model (RMSE, R²)
+│   ├── predict.py                 # CLI prediction script
+│   └── utils.py                   # Helper functions (optional)
+│
+├── app.py                         # Gradio web UI for live predictions
+├── main.py                        # Entry point / setup helper
+├── requirements.txt               # Project dependencies
+└── .gitignore                     # Ignore venv, cache, large files
