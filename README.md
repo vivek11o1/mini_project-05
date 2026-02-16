@@ -21,7 +21,7 @@ PriceNest/
 ├── data/
 │   └── housing.csv
 ├── models/
-│   └── price_model.joblib
+│   └── price_model.joblib        
 ├── src/
 │   ├── __init__.py
 │   ├── data_loader.py
@@ -29,8 +29,8 @@ PriceNest/
 │   ├── train.py
 │   ├── predict.py
 │   └── utils.py
-├── app.py
-├── main.py
+├── app.py                      
+├── main.py                       
 ├── requirements.txt
 ├── .gitignore
 └── README.md
