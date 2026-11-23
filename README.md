@@ -3,7 +3,62 @@
 PriceNest is an end-to-end Machine Learning project that predicts house prices based on key features such as area, number of bedrooms, and bathrooms.
 The project includes data preprocessing, model training, evaluation, CLI predictions, and an interactive Gradio web interface for real-time predictions.
 
+## 🚀 FastAPI Service (Swagger UI)
 
+A REST API is available alongside the original Gradio UI. The Gradio `app.py` is unchanged; the API lives in `api.py`.
+
+```bash
+pip install -r requirements.txt
+uvicorn api:app --reload
+```
+
+Open **http://localhost:8000/docs** for Swagger UI. The model is not committed to Git (`models/*.joblib` is gitignored), so `api_helper.py` trains it on first start from the bundled `melb_data.csv` (mapping `BuildingArea` → `area`, `Bedroom2` → `bedrooms`, `Bathroom` → `bathrooms`, `Price` → `price`).
+
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | `/` | API information |
+| GET | `/health` | Health check and feature names |
+| POST | `/predict` | Price one house |
+| POST | `/predict/batch` | Price several houses |
+| POST | `/predict/csv` | Upload a CSV with `area, bedrooms, bathrooms` columns |
+| GET | `/docs` | Swagger UI |
+
+Example request:
+
+```bash
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"area": 1500, "bedrooms": 3, "bathrooms": 2}'
+```
+
+Example response:
+
+```json
+{"area": 1500.0, "bedrooms": 3.0, "bathrooms": 2.0, "predicted_price": 1234567.89}
+```
+
+Smoke test (with the server running): `python test_api.py`.
+
+### Docker / deployment
+
+```bash
+docker build -t pricenest .
+docker run -p 8000:8000 pricenest
+```
+
+Open **http://localhost:8000/docs**. The container binds to `0.0.0.0` and reads `PORT` (Render injects `PORT=10000`), falling back to `8000` locally.
+
+On **Render**, create a **Web Service** with:
+
+- **Runtime:** Docker (included `Dockerfile` uses Python 3.12)
+- **Health Check Path:** `/health` (initial delay ~15s)
+- No build/start commands needed.
+
+If using Render's **Python** runtime instead (dashboard shows `python3`), set:
+
+- **Build Command:** `pip install -r requirements.txt`
+- **Start Command:** `uvicorn api:app --host 0.0.0.0 --port $PORT`
+- **Health Check Path:** `/health`
 
 ✨ Features
 	•	📊 Load and clean housing dataset
